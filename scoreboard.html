@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Workout Log</title>
+
+  <!-- Handwritten Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --paper-bg: #fdfbf7;
+      --line-color: #d1e5f0;
+      --margin-line: #ff9999;
+      --pencil-color: #2b2b2b;
+      --pencil-light: #444444;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #e5e5e5;
+      font-family: 'Kalam', cursive;
+      color: var(--pencil-color);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Looseleaf Paper Styling */
+    .paper {
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--paper-bg);
+      background-image: repeating-linear-gradient(transparent,
+          transparent 29px,
+          var(--line-color) 29px,
+          var(--line-color) 30px);
+      padding: 10px 10px 10px 42px;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Red Left Margin Line */
+    .paper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 34px;
+      width: 2px;
+      background-color: var(--margin-line);
+    }
+
+    /* Exercise Card Formatting (Zero spaces between sections) */
+    .exercise-card {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .exercise-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Editable Notes Line - Larger Font */
+    .exercise-notes {
+      font-size: 1.05rem;
+      color: var(--pencil-light);
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      font-style: italic;
+      min-height: 1.2rem;
+    }
+
+    /* Sets Container Layout */
+    .sets-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .set-label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--pencil-light);
+    }
+
+    .set-box {
+      width: 44px;
+      height: 28px;
+      border: 1.5px dashed #777;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.1s, transform 0.1s;
+    }
+
+    .set-box:active,
+    .exercise-notes:active {
+      transform: scale(0.97);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Modals Base Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    /* Numpad aligns to bottom */
+    #num-modal {
+      align-items: flex-end;
+    }
+
+    /* Notes modal aligns to top */
+    #notes-modal {
+      align-items: flex-start;
+      padding-top: 15px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      width: 100%;
+      max-width: 500px;
+      background-color: #fff;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: sans-serif;
+    }
+
+    #num-modal .modal-container {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    #notes-modal .modal-container {
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    /* Numpad Styles */
+    .numpad-display {
+      font-size: 2.5rem;
+      text-align: center;
+      padding: 8px;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .num-btn {
+      padding: 16px 0;
+      font-size: 1.6rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: #e8e8e8;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .num-btn:active {
+      background-color: #ccc;
+    }
+
+    .num-btn.action {
+      background-color: #ffd1d1;
+    }
+
+    .num-btn.submit {
+      background-color: #d1ffd6;
+      grid-column: span 2;
+    }
+
+    /* Notes Input Popup Styles */
+    .notes-input {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-family: 'Kalam', cursive;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background-color: #ffd1d1;
+    }
+
+    .btn-save {
+      background-color: #d1ffd6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="paper" id="exercise-list"></div>
+
+  <!-- Numpad Modal (Bottom Aligned) -->
+  <div class="modal-overlay" id="num-modal">
+    <div class="modal-container">
+      <div class="numpad-display" id="display">0</div>
+      <div class="numpad-grid">
+        <button class="num-btn" onclick="appendNum('1')">1</button>
+        <button class="num-btn" onclick="appendNum('2')">2</button>
+        <button class="num-btn" onclick="appendNum('3')">3</button>
+        <button class="num-btn" onclick="appendNum('4')">4</button>
+        <button class="num-btn" onclick="appendNum('5')">5</button>
+        <button class="num-btn" onclick="appendNum('6')">6</button>
+        <button class="num-btn" onclick="appendNum('7')">7</button>
+        <button class="num-btn" onclick="appendNum('8')">8</button>
+        <button class="num-btn" onclick="appendNum('9')">9</button>
+        <button class="num-btn action" onclick="clearNum()">C</button>
+        <button class="num-btn" onclick="appendNum('0')">0</button>
+        <button class="num-btn action" onclick="backspaceNum()">⌫</button>
+        <button class="num-btn action" onclick="closeNumModal()">Cancel</button>
+        <button class="num-btn submit" onclick="saveNum()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text Notes Modal (Top Aligned) -->
+  <div class="modal-overlay" id="notes-modal">
+    <div class="modal-container">
+      <h3 style="margin: 0; font-size: 1.2rem;">Edit Exercise Notes</h3>
+      <input type="text" id="notes-input" class="notes-input" placeholder="Notes..." />
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeNotesModal()">Cancel</button>
+        <button class="btn-save" onclick="saveNotes()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const exercisesData = [
+      { id: 'incline_db_press', name: 'Incline Dumbbell Press' },
+      { id: 'pullups', name: 'Pullups' },
+      { id: 'squats', name: 'Squats' },
+      { id: 'overhead_db_press', name: 'Overhead Dumbbell Press' },
+      { id: 'bodyweight_rows', name: 'Bodyweight Rows' },
+      { id: 'glute_bridges', name: 'Glute Bridges' }
+    ];
+
+    let targetSet = null;   // { exId, setIndex }
+    let targetNote = null;  // exId
+    let currentValue = '0';
+
+    // Local Storage Initializers
+    let savedSets = JSON.parse(localStorage.getItem('workoutLogSets')) || {};
+    let savedNotes = JSON.parse(localStorage.getItem('workoutLogNotes')) || {};
+
+    const container = document.getElementById('exercise-list');
+
+    // Build Exercise List
+    exercisesData.forEach(ex => {
+      if (!savedSets[ex.id]) savedSets[ex.id] = [0, 0, 0, 0];
+      if (savedNotes[ex.id] === undefined) savedNotes[ex.id] = 'Notes...';
+
+      const card = document.createElement('div');
+      card.className = 'exercise-card';
+
+      let setsHtml = '';
+      for (let i = 0; i < 4; i++) {
+        setsHtml += `
+          <div class="set-box" 
+               id="box-${ex.id}-${i}"
+               data-ex="${ex.id}" 
+               data-set="${i}">
+            ${savedSets[ex.id][i]}
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="exercise-title">${ex.name}</div>
+        <div class="exercise-notes" id="note-${ex.id}" data-ex="${ex.id}">${savedNotes[ex.id]}</div>
+        <div class="sets-container">
+          <span class="set-label">Sets:</span>
+          ${setsHtml}
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    // Universal Long-Press Handler Helper
+    function attachLongPress(elements, callback) {
+      elements.forEach(el => {
+        let timer = null;
+
+        const start = (e) => {
+          timer = setTimeout(() => {
+            callback(el);
+          }, 400); // 400ms long press threshold
+        };
+
+        const cancel = () => {
+          if (timer) clearTimeout(timer);
+        };
+
+        el.addEventListener('touchstart', start, { passive: true });
+        el.addEventListener('touchend', cancel);
+        el.addEventListener('touchmove', cancel);
+        el.addEventListener('mousedown', start);
+        el.addEventListener('mouseup', cancel);
+        el.addEventListener('mouseleave', cancel);
+      });
+    }
+
+    // Attach Long-Press to Set Boxes
+    attachLongPress(document.querySelectorAll('.set-box'), (el) => {
+      const exId = el.getAttribute('data-ex');
+      const setIdx = parseInt(el.getAttribute('data-set'));
+      openNumModal(exId, setIdx);
+    });
+
+    // Attach Long-Press to Notes Lines
+    attachLongPress(document.querySelectorAll('.exercise-notes'), (el) => {
+      const exId = el.getAttribute('data-ex');
+      openNotesModal(exId);
+    });
+
+    // --- Numpad Logic ---
+    function openNumModal(exId, setIndex) {
+      targetSet = { exId, setIndex };
+      currentValue = savedSets[exId][setIndex].toString();
+      updateDisplay();
+      document.getElementById('num-modal').classList.add('active');
+    }
+
+    function closeNumModal() {
+      document.getElementById('num-modal').classList.remove('active');
+    }
+
+    function updateDisplay() {
+      document.getElementById('display').innerText = currentValue || '0';
+    }
+
+    function appendNum(num) {
+      if (currentValue === '0') {
+        currentValue = num;
+      } else {
+        if (currentValue.length < 4) currentValue += num;
+      }
+      updateDisplay();
+    }
+
+    function clearNum() {
+      currentValue = '0';
+      updateDisplay();
+    }
+
+    function backspaceNum() {
+      if (currentValue.length > 1) {
+        currentValue = currentValue.slice(0, -1);
+      } else {
+        currentValue = '0';
+      }
+      updateDisplay();
+    }
+
+    function saveNum() {
+      if (targetSet) {
+        const val = parseInt(currentValue) || 0;
+        savedSets[targetSet.exId][targetSet.setIndex] = val;
+        localStorage.setItem('workoutLogSets', JSON.stringify(savedSets));
+        document.getElementById(`box-${targetSet.exId}-${targetSet.setIndex}`).innerText = val;
+      }
+      closeNumModal();
+    }
+
+    // --- Notes Modal Logic ---
+    function openNotesModal(exId) {
+      targetNote = exId;
+      const input = document.getElementById('notes-input');
+      const currentNote = savedNotes[exId];
+      input.value = (currentNote === 'Notes...') ? '' : currentNote;
+      document.getElementById('notes-modal').classList.add('active');
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function closeNotesModal() {
+      document.getElementById('notes-modal').classList.remove('active');
+    }
+
+    function saveNotes() {
+      if (targetNote) {
+        const inputVal = document.getElementById('notes-input').value.trim();
+        const finalNote = inputVal === '' ? 'Notes...' : inputVal;
+        savedNotes[targetNote] = finalNote;
+        localStorage.setItem('workoutLogNotes', JSON.stringify(savedNotes));
+        document.getElementById(`note-${targetNote}`).innerText = finalNote;
+      }
+      closeNotesModal();
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => { });
+    }
+  </script>
+</body>
+
+</html>

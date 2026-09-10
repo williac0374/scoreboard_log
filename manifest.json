@@ -1,0 +1,16 @@
+{
+  "name": "scoreboard_log",
+  "short_name": "scoreboard_log",
+  "start_url": "./scoreboard_log.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/html-apps/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

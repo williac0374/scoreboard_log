@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Paper Drop Shadow -->
+    <filter id="paperShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Base App Icon Background -->
+  <rect width="512" height="512" rx="108" fill="#2c3e50"/>
+
+  <!-- Looseleaf Paper Sheet (Icon 1 & 2) -->
+  <g filter="url(#paperShadow)">
+    <rect x="100" y="64" width="316" height="384" rx="14" fill="#fdfbf7"/>
+
+    <!-- Red Left Margin Line -->
+    <line x1="160" y1="64" x2="160" y2="448" stroke="#ff8888" stroke-width="4"/>
+
+    <!-- Blue Notebook Ruling Lines -->
+    <line x1="100" y1="128" x2="416" y2="128" stroke="#d1e5f0" stroke-width="3"/>
+    <line x1="100" y1="184" x2="416" y2="184" stroke="#d1e5f0" stroke-width="3"/>
+    <line x1="100" y1="240" x2="416" y2="240" stroke="#d1e5f0" stroke-width="3"/>
+    <line x1="100" y1="296" x2="416" y2="296" stroke="#d1e5f0" stroke-width="3"/>
+    <line x1="100" y1="352" x2="416" y2="352" stroke="#d1e5f0" stroke-width="3"/>
+    <line x1="100" y1="408" x2="416" y2="408" stroke="#d1e5f0" stroke-width="3"/>
+  </g>
+
+  <!-- Spiral Rings & Punch Holes (From Icon 2) -->
+  <g fill="#7f8c8d">
+    <circle cx="125" cy="100" r="8"/>
+    <circle cx="125" cy="180" r="8"/>
+    <circle cx="125" cy="260" r="8"/>
+    <circle cx="125" cy="340" r="8"/>
+  </g>
+  <g stroke="#bdc3c7" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M 82,100 C 82,88 125,88 125,100"/>
+    <path d="M 82,180 C 82,168 125,168 125,180"/>
+    <path d="M 82,260 C 82,248 125,248 125,260"/>
+    <path d="M 82,340 C 82,328 125,328 125,340"/>
+  </g>
+
+  <!-- Dumbbell Silhouette (From Icon 1) -->
+  <g fill="#333333" opacity="0.85">
+    <rect x="180" y="152" width="152" height="20" rx="5"/>
+    <rect x="200" y="126" width="22" height="72" rx="6"/>
+    <rect x="290" y="126" width="22" height="72" rx="6"/>
+    <rect x="178" y="138" width="18" height="48" rx="5"/>
+    <rect x="316" y="138" width="18" height="48" rx="5"/>
+  </g>
+
+  <!-- Workout Set Tracker Boxes & Checkmark (From Icon 2) -->
+  <g fill="none" stroke="#2c3e50" stroke-width="3" stroke-dasharray="5 3">
+    <rect x="180" y="258" width="44" height="36" rx="6"/>
+    <rect x="234" y="258" width="44" height="36" rx="6"/>
+    <rect x="288" y="258" width="44" height="36" rx="6"/>
+    <rect x="342" y="258" width="44" height="36" rx="6"/>
+  </g>
+  <!-- Handwritten Checkmark -->
+  <path d="M 190 276 L 200 286 L 218 262" fill="none" stroke="#27ae60" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Classic Pencil (From Icon 1) -->
+  <g transform="translate(240, 325) rotate(-35)">
+    <path d="M0,0 L140,0 L160,16 L140,32 L0,32 Z" fill="#f39c12"/>
+    <path d="M140,0 L160,16 L140,32 Z" fill="#f1c40f"/>
+    <path d="M152,10 L160,16 L152,22 Z" fill="#2c3e50"/>
+    <rect x="-20" y="0" width="20" height="32" rx="4" fill="#e74c3c"/>
+    <rect x="-4" y="0" width="8" height="32" fill="#bdc3c7"/>
+  </g>
+</svg>

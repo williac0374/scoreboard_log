@@ -1,25 +1,18 @@
 {
-  "name": "Workout Log",
-  "short_name": "Workout Log",
-  "description": "Track your workout sets and notes",
-  "start_url": "./",
+  "name": "scoreboard_log",
+  "short_name": "scoreboard_log",
+  "id": "/scoreboard_log/",
+  "start_url": "/scoreboard_log/scoreboard_log.html",
+  "scope": "/scoreboard_log/",
   "display": "standalone",
-  "background_color": "#fdfbf7",
-  "theme_color": "#2b2b2b",
-  "scope": "./",
-  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232b2b2b' width='192' height='192'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23fdfbf7' font-size='80' font-weight='bold' font-family='Arial'>💪</text></svg>",
-      "sizes": "192x192",
+      "src": "/scoreboard_log/icon.svg",
       "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%232b2b2b' width='512' height='512'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23fdfbf7' font-size='300' font-weight='bold' font-family='Arial'>💪</text></svg>",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
